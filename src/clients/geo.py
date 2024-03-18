@@ -4,7 +4,7 @@
 from http import HTTPStatus
 from typing import Optional
 from urllib.parse import urlencode, urljoin
-
+import os
 import httpx
 
 from clients.base.base import BaseClient
@@ -42,16 +42,19 @@ class LocationClient(BaseClient):
         :return:
         """
 
-        endpoint = "reverse-geocode-client"
+        endpoint = "reverse-geocode"
         query_params = {
             "latitude": latitude,
             "longitude": longitude,
             "localityLanguage": "en",
+            "key": os.getenv("API_KEY")
         }
         url = urljoin(
             self.base_url,
             f"{endpoint}?{urlencode(query_params)}",
         )
+        print(os.getenv("API_KEY"))
+        print(url)
         if response := await self._request(url):
             return LocalityDTO(
                 city=response.get("city") if response.get("city", "").strip() else None,
