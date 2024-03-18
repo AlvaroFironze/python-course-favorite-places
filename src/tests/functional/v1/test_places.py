@@ -1,7 +1,9 @@
-import pytest
-from starlette import status
 import re
+
+import pytest
 from geocoder.base import OneResult
+from starlette import status
+
 from models import Place
 from repositories.places_repository import PlacesRepository
 
@@ -85,6 +87,7 @@ class TestPlacesCreateMethod:
         assert created_data[0].country == mock_response["countryCode"]
         assert created_data[0].city == mock_response["city"]
         assert created_data[0].locality == mock_response["locality"]
+
     @pytest.mark.asyncio
     @pytest.mark.usefixtures("event_producer_publish")
     async def test_get_favorite_list(self, client, session):
@@ -104,7 +107,7 @@ class TestPlacesCreateMethod:
         request_body = {
             "latitude": 40,
             "longitude": -75,
-            "description": "Описание тестового места"
+            "description": "Описание тестового места",
         }
         # проверка существования записи в базе данных
         await PlacesRepository(session).create_model(request_body)

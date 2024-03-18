@@ -48,8 +48,7 @@ class Settings(BaseSettings):
     database_url: PostgresDsn = Field(
         default="postgresql+asyncpg://favorite_places_user:secret@db/favorite_places"
     )
-    #: конфигурация RabbitMQ
-    rabbitmq: RabbitMQConfig
+
 
     class Config:
         env_file = ".env"

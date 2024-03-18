@@ -12,6 +12,7 @@ class MetadataTag(BaseModel):
     class Config:
         allow_population_by_field_name = True
 
+
 class Description(BaseModel):
     """Модель для описания"""
 

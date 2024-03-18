@@ -90,7 +90,9 @@ class PlacesService:
 
         return primary_key
 
-    async def update_place(self, primary_key: int, place_upd: PlaceUpdate) -> Optional[int]:
+    async def update_place(
+        self, primary_key: int, place_upd: PlaceUpdate
+    ) -> Optional[int]:
         """
         Обновление объекта любимого места по переданным данным.
 
@@ -105,7 +107,7 @@ class PlacesService:
         )
         # при изменении координат – обогащение данных путем получения дополнительной информации от API
         if location := await LocationClient().get_location(
-                latitude=place_upd.latitude, longitude=place_upd.longitude
+            latitude=place_upd.latitude, longitude=place_upd.longitude
         ):
             place.country = location.alpha2code
             place.city = location.city

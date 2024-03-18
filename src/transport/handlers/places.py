@@ -1,12 +1,14 @@
-from fastapi import APIRouter, Depends, Query, status, Request
+import geocoder
+from fastapi import APIRouter, Depends, Query, Request, status
 from fastapi_pagination import Page, paginate
+from geocoder.ipinfo import IpinfoQuery
+
 from exceptions import ApiHTTPException, ObjectNotFoundException
 from models.places import Place
 from schemas.places import PlaceResponse, PlacesListResponse, PlaceUpdate
-from schemas.routes import Description,MetadataTag
+from schemas.routes import Description, MetadataTag
 from services.places_service import PlacesService
-import geocoder
-from geocoder.ipinfo import IpinfoQuery
+
 router = APIRouter()
 
 
@@ -140,7 +142,9 @@ async def delete(primary_key: int, places_service: PlacesService = Depends()) ->
     status_code=status.HTTP_201_CREATED,
 )
 async def create_auto(
-    request: Request, description: Description, places_service: PlacesService = Depends()
+    request: Request,
+    description: Description,
+    places_service: PlacesService = Depends(),
 ) -> PlaceResponse:
     """
     Создание нового объекта любимого места с автоматическим определением координат.
@@ -153,14 +157,15 @@ async def create_auto(
 
     ip_info: IpinfoQuery = geocoder.ip(request.client.host)
     if (
-            ip_info.geojson.get("features", None) is None
-            or len(ip_info.geojson["features"]) == 0
-            or ip_info.geojson["features"][0].get("geometry", None) is None
+        ip_info.geojson.get("features", None) is None
+        or len(ip_info.geojson["features"]) == 0
+        or ip_info.geojson["features"][0].get("geometry", None) is None
     ):
         print(request.client)
         print(ip_info.geojson["features"])
         raise ApiHTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Не удалось определить местоположение"
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Не удалось определить местоположение",
         )
     coordinates = ip_info.geojson["features"][0]["geometry"]["coordinates"]
     place = Place(

@@ -11,10 +11,10 @@ import os
 import sys
 from datetime import date
 
-from settings import settings
+
 
 sys.path.insert(0, os.path.abspath("../../src"))
-
+from settings import settings
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
